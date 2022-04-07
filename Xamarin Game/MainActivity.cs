@@ -12,7 +12,7 @@ namespace Xamarin_Game
         protected override void OnCreate(Bundle savedInstanceState)
         {
             //усатановим возможность полноэкранного режима
-            this.Window.AddFlags(Android.Views.WindowManagerFlags.Fullscreen);
+            this.Window.AddFlags(Android.Views.WindowManagerFlags.Fullscreen); 
 
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);

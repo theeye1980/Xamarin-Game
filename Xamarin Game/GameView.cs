@@ -13,13 +13,21 @@ using System.Threading;
 
 namespace Xamarin_Game
 {
-    class GameView : SurfaceView, ISurfaceHolderCallback
+    class GameView : SurfaceView, ISurfaceHolderCallback // Наследуемся от класса, который позволяет управлять канвасом
     {
         Thread gameThread, renderThread;  //рендер и игра в разных потоках
         ISurfaceHolder surfacholder; // для добавления колбека
         bool isRunning;
         int displayX, displayY;
         float rX, rY; //величина соотношения экрана
+        Background background;
+        //Slightshot slightshot;
+        //Bird bird;
+        List<Bird> birds = new List<Bird>();
+        int BIRDS_MAX_COUNT = 5;
+
+        Hero hero;
+        
 
         public GameView(Context context) : base(context)
         {
@@ -32,11 +40,30 @@ namespace Xamarin_Game
 
             surfacholder = Holder;
             surfacholder.AddCallback(this);
+
+            background = new Background(context);
+            //bird = new Bird(context);
+            for (int i = 0; i < BIRDS_MAX_COUNT; i++) {
+                birds.Add(new Bird(context,i));
+            }
+
+            hero = new Hero(context);
+            
         }
 
         override
-        public void Draw(Canvas canvas) { 
-            canvas.DrawColor(Color.Yellow);
+        public void Draw(Canvas canvas) {
+            //canvas.DrawColor(Color.Yellow);
+            canvas.DrawBitmap(background.Bitmap, background.X, background.Y, null);
+            //canvas.DrawBitmap(bird.Bitmap, bird.X, bird.Y, null);
+            for (int i = 0; i < BIRDS_MAX_COUNT; i++)
+            {
+                Bird bird = birds.ElementAt(i);
+                canvas.DrawBitmap(bird.Bitmap, bird.X, bird.Y, null);
+                
+            }
+
+            canvas.DrawBitmap(hero.Bitmap, hero.X, hero.X, null);
         }
         public void Run() {
             Canvas canvas = null;
@@ -47,13 +74,24 @@ namespace Xamarin_Game
                     Draw(canvas);
                     surfacholder.UnlockCanvasAndPost(canvas);
                 }
-                Thread.Sleep(17); //После отрисовки приостанавливаем поток на 17 мс
+                Thread.Sleep(10); //После отрисовки приостанавливаем поток на 17 мс
             }
         }
          public void Update()
         {
+            while (isRunning)
+            {
+                
+                for (int i = 0; i < BIRDS_MAX_COUNT; i++)
+                {
+                    Bird bird = birds.ElementAt(i);
+                    bird.MoveBird();
 
-        }
+                }
+                Thread.Sleep(17); //После отрисовки приостанавливаем поток на 17 мс
+            }
+         
+         }
 
 
 
