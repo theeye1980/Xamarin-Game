@@ -111,6 +111,22 @@ namespace Xamarin_Game
             //throw new NotImplementedException();
             Pause();    
         }
+
+        public override bool OnTouchEvent(MotionEvent e)
+        {
+            if (e.ActionMasked == MotionEventActions.Down)
+            {
+
+                if (e.GetX() < 0 & e.GetX() < displayX / 3)
+                {
+                    hero.IsMoveLeft = true;
+                    hero.IsMoveRight = false;
+                }
+                
+            }
+            return base.OnTouchEvent(e);
+        }
+
         public void Resume() {
             isRunning = true;
             gameThread = new Thread(new ThreadStart(Update)); //Инициализируем потоки

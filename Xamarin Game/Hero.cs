@@ -27,5 +27,8 @@ namespace Xamarin_Game
             X = (DisplayX - Width) / 2;
             Y = (DisplayY - Height);
         }
+
+        public bool IsMoveLeft { get => isMoveLeft; set => isMoveLeft = value; }
+        public bool IsMoveRight { get => isMoveRight; set => isMoveRight = value; }
     }
 }
