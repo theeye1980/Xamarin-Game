@@ -26,6 +26,29 @@ namespace Xamarin_Game
 
             X = (DisplayX - Width) / 2;
             Y = (DisplayY - Height);
+
+            Speed = (int)(15 * (Metrics.WidthPixels / 1920f));
+        }
+
+        public override void MoveObject()
+        {
+            if (isMoveLeft) {
+
+                X -= Speed;
+                if (X <= 0) {
+
+                    X = 0;
+                }
+            } else if (isMoveRight) { 
+                
+                X += Speed;
+                if ((X + Width)>DisplayX )
+                {
+
+                    X = DisplayX - Width;
+                }
+
+            }
         }
 
         public bool IsMoveLeft { get => isMoveLeft; set => isMoveLeft = value; }

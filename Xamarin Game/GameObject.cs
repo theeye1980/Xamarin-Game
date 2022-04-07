@@ -27,6 +27,9 @@ namespace Xamarin_Game
             DisplayY = metrics.HeightPixels;
         }
 
+        public virtual void MoveObject()
+        { }
+
         public Bitmap Bitmap { get => bitmap; set => bitmap = value; }
         public int X { get => x; set => x = value; }
         public int Y { get => y; set => y = value; }

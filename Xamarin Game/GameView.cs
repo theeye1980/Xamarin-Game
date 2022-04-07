@@ -63,7 +63,7 @@ namespace Xamarin_Game
                 
             }
 
-            canvas.DrawBitmap(hero.Bitmap, hero.X, hero.X, null);
+            canvas.DrawBitmap(hero.Bitmap, hero.X, hero.Y, null);
         }
         public void Run() {
             Canvas canvas = null;
@@ -85,9 +85,10 @@ namespace Xamarin_Game
                 for (int i = 0; i < BIRDS_MAX_COUNT; i++)
                 {
                     Bird bird = birds.ElementAt(i);
-                    bird.MoveBird();
+                    bird.MoveObject();
 
                 }
+                hero.MoveObject();
                 Thread.Sleep(17); //После отрисовки приостанавливаем поток на 17 мс
             }
          
@@ -117,14 +118,26 @@ namespace Xamarin_Game
             if (e.ActionMasked == MotionEventActions.Down)
             {
 
-                if (e.GetX() < 0 & e.GetX() < displayX / 3)
+                if (e.GetX() < displayX / 3)
                 {
                     hero.IsMoveLeft = true;
                     hero.IsMoveRight = false;
                 }
-                
+                else if (e.GetX() < displayX  & e.GetX()> 2 * displayX / 3)
+                {
+
+                    hero.IsMoveLeft = false;
+                    hero.IsMoveRight = true;
+
+                }
+
             }
-            return base.OnTouchEvent(e);
+            else if (e.ActionMasked == MotionEventActions.Up) {
+
+                hero.IsMoveLeft = false;
+                hero.IsMoveRight = false;
+            }
+            return true;
         }
 
         public void Resume() {

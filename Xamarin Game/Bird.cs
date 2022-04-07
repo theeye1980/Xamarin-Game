@@ -40,10 +40,11 @@ namespace Xamarin_Game
             //X = (metrics.WidthPixels - Width* index) / 2; //задаем появление элемента строго по центру
             //Y = (metrics.HeightPixels - Height * index) / 2;
 
-            Speed = -(int) (4 + 2*(index+1)*(Metrics.WidthPixels / 1920f));
+            Speed = -(int) (2 + 2*(index+1)*(Metrics.WidthPixels / 1920f));
         }
 
-        public void MoveBird() {
+        override
+        public void MoveObject() {
 
             X += Speed;
             if (X + Width > DisplayX)
