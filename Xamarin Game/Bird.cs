@@ -31,7 +31,7 @@ namespace Xamarin_Game
 
             Bitmap = BitmapFactory.DecodeResource(context.Resources, ducksId[index]);
             //var metrics = context.Resources.DisplayMetrics;
-            Width = Metrics.WidthPixels / 16; //задаем ширину 1/8 от ширины экрана
+            Width = Metrics.WidthPixels / 9; //задаем ширину 1/8 от ширины экрана
             Height = Width * Bitmap.Height/Bitmap.Width;
             Bitmap = Bitmap.CreateScaledBitmap(Bitmap, Width, Height, true);
             

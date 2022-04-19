@@ -15,6 +15,7 @@ namespace Xamarin_Game
 {
     class GameView : SurfaceView, ISurfaceHolderCallback // Наследуемся от класса, который позволяет управлять канвасом
     {
+        Context context;
         Thread gameThread, renderThread;  //рендер и игра в разных потоках
         ISurfaceHolder surfacholder; // для добавления колбека
         bool isRunning;
@@ -24,13 +25,16 @@ namespace Xamarin_Game
         //Slightshot slightshot;
         //Bird bird;
         List<Bird> birds = new List<Bird>();
+        List<Stone> stones = new List<Stone>();
         int BIRDS_MAX_COUNT = 5;
 
         Hero hero;
         
 
         public GameView(Context context) : base(context)
+
         {
+            this.context = context;
             //зададим переменную для получения размеров экрана
             var metrics = Resources.DisplayMetrics;
             displayX = metrics.WidthPixels;
@@ -62,8 +66,27 @@ namespace Xamarin_Game
                 canvas.DrawBitmap(bird.Bitmap, bird.X, bird.Y, null);
                 
             }
-
+            Paint paint = new Paint();
+            paint.Color=Color.White;
             canvas.DrawBitmap(hero.Bitmap, hero.X, hero.Y, null);
+            canvas.DrawText("Привет",30,30, paint);
+
+
+
+            if (stones.Count > 0)
+            {
+
+                for (int i = 0; i < stones.Count; i++)
+                {
+
+                    Stone stone = stones.ElementAt(i);
+                    canvas.DrawBitmap(stone.Bitmap, stone.X, stone.Y, null);
+
+                }
+
+            }
+  
+
         }
         public void Run() {
             Canvas canvas = null;
@@ -89,6 +112,26 @@ namespace Xamarin_Game
 
                 }
                 hero.MoveObject();
+
+                //Пишем обработку камней
+
+                if (stones.Count > 0) {
+
+                    //Перебираем активные камни и разбираемся с этим
+                    for (int i = 0; i < stones.Count; i++) {  
+                    
+                        Stone stone = stones.ElementAt(i);
+                        stone.MoveObject();
+                        // Удаляем камень из массива, если он вышел за пределы экрана
+                        if (stone.Y + Height < 0) { 
+                        stones.Remove(stone);
+                        
+                        }
+                    }
+                
+                }
+
+
                 Thread.Sleep(17); //После отрисовки приостанавливаем поток на 17 мс
             }
          
@@ -122,13 +165,20 @@ namespace Xamarin_Game
                 {
                     hero.IsMoveLeft = true;
                     hero.IsMoveRight = false;
+                    Console.WriteLine("Едем влево");
                 }
-                else if (e.GetX() < displayX  & e.GetX()> 2 * displayX / 3)
+                else if (e.GetX() < displayX & e.GetX() > 2 * displayX / 3)
                 {
 
                     hero.IsMoveLeft = false;
                     hero.IsMoveRight = true;
+                    Console.WriteLine("Едем вправо");
+                }
+                else {
 
+                    Stone stone = new Stone(context, hero);
+                    stones.Add(stone);
+                    Console.WriteLine("камень пошел");
                 }
 
             }
@@ -137,7 +187,8 @@ namespace Xamarin_Game
                 hero.IsMoveLeft = false;
                 hero.IsMoveRight = false;
             }
-            return true;
+            //if (e.ActionMasked == MotionEventActions.)
+                return true;
         }
 
         public void Resume() {
